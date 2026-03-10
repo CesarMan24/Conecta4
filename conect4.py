@@ -44,9 +44,19 @@ def crear_tablero():
     return np.zeros((FILAS, COLUMNAS))
 
 def obtener_siguiente_fila_libre(tablero, col):
+    turnos = [1,2]
+    pastf = 0
     for f in range(FILAS):
-        if tablero[f][col] == 0:
-            return f
+        print()
+        
+        # if tablero[f][col] != 0:
+        if tablero[f][col] in turnos:
+            print('devuelve ' +str(pastf))
+            return pastf #f
+        if f == 5:
+            print('devuelve 5')
+            return 5
+        pastf = f
 
 def verificar_victoria(tablero, pieza):
     imprimir_tablero(tablero)
@@ -166,7 +176,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
           # puntos_juntos(tablero, filauso + 1, colauso)
         #   return arrayjuntos
         # elif turnopieza == tablero[filauso][colauso - 1]  : #misma fila columna izquierda
-        elif colauso > 0:
+        if colauso > 0:
             filauso = fila
             colauso = col
             while turnopieza == tablero[filauso][colauso - 1]:#misma fila columna izquierda
@@ -188,7 +198,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
             # return arrayjuntos
         # elif turnopieza == tablero[filauso][colauso + 1] : #misma fila columna derecha
         
-        elif colauso < 6:
+        if colauso < 6:
             filauso = fila
             colauso = col
             while turnopieza == tablero[filauso][colauso + 1] :#misma fila columna derecha 
@@ -209,30 +219,30 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
             #         return arrayjuntos
             # return arrayjuntos
         # elif turnopieza == tablero[filauso + 1][colauso - 1] :#diagonal izquieda abajo
-        elif filauso < 5 or colauso > 0:
+        if filauso < 5 and colauso > 0:
             filauso = fila
             colauso = col
             while turnopieza == tablero[filauso + 1][colauso - 1]:#diagonal izquieda abajo
             #    arrayjuntos = arrayjuntos + 1
-               diccionario_cantidades['diagonal_abajo_izquierda'] = diccionario_cantidades['derecha'] + 1
+               diccionario_cantidades['diagonal_abajo_izquierda'] = diccionario_cantidades['diagonal_abajo_izquierda'] + 1
                filauso = filauso + 1
                colauso = colauso - 1
                if colauso == 0 or filauso == 5:
                    break
             filauso = fila
             colauso = col
-            if filauso > 0 or colauso < 6:
+            if filauso > 0 and colauso < 6:
                 while turnopieza == tablero[filauso - 1][colauso + 1]: 
                     # arrayjuntos = arrayjuntos + 1
                     diccionario_cantidades['diagonal_abajo_izquierda'] = diccionario_cantidades['diagonal_abajo_izquierda'] + 1
                     filauso = filauso - 1
                     colauso = colauso + 1
-                    if colauso == 6 or filauso == 0:
+                    if colauso == 6 and filauso == 0:
                         break
                 #     return arrayjuntos
                 # return arrayjuntos
         # elif turnopieza == tablero[filauso - 1][colauso - 1] :#diagonal izquierda arriba
-        elif filauso > 0 or colauso > 0:
+        if filauso > 0 and colauso > 0:
             filauso = fila
             colauso = col
             while turnopieza == tablero[filauso - 1][colauso - 1]: #diagonal izquierda arriba
@@ -244,7 +254,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
                    break
             filauso = fila
             colauso = col
-            if filauso < 5 or colauso > 1:
+            if filauso < 5 and colauso < 6:
                 while turnopieza == tablero[filauso + 1][colauso + 1]: 
                     # arrayjuntos = arrayjuntos + 1
                     diccionario_cantidades['diagonal_arriba_izquierda'] = diccionario_cantidades['diagonal_arriba_izquierda'] + 1
@@ -255,7 +265,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
                 #     return arrayjuntos
                 # return arrayjuntos
         # elif turnopieza == tablero[filauso - 1][colauso + 1]: #diagonal derecha arriba
-        elif filauso > 0 or colauso < 6:
+        if filauso > 0 and colauso < 6:
             filauso = fila
             colauso = col
             while turnopieza == tablero[filauso - 1][colauso + 1]: #diagonal derecha arriba
@@ -267,7 +277,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
                    break
             filauso = fila
             colauso = col
-            if filauso < 5 or colauso > 0:
+            if filauso < 5 and colauso > 0:
                 while turnopieza == tablero[filauso + 1][colauso - 1]: 
                     # arrayjuntos = arrayjuntos + 1
                     diccionario_cantidades['diagonal_arriba_derecha'] = diccionario_cantidades['diagonal_arriba_derecha'] + 1
@@ -278,7 +288,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
                 # return arrayjuntos
         # elif turnopieza == tablero[filauso + 1][colauso + 1]: #diagonal derecha abajo
         
-        elif filauso < 5 or colauso < 6:
+        if filauso < 5 and colauso < 6:
             filauso = fila
             colauso = col
             while turnopieza == tablero[filauso + 1][colauso + 1]:
@@ -290,7 +300,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
                    break
             filauso = fila
             colauso = col
-            if colauso > 0 or filauso > 0:
+            if colauso > 0 and filauso > 0:
                 while turnopieza == tablero[filauso - 1][colauso - 1]: 
                     # arrayjuntos = arrayjuntos + 1
                     diccionario_cantidades['diagonal_abajo_derecha'] = diccionario_cantidades['diagonal_abajo_derecha'] + 1
@@ -302,56 +312,78 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
         maximum = max(diccionario_cantidades, key=diccionario_cantidades.get)  # Just use 'min' instead of 'max' for minimum.
         print('mayor cantidad ' +str(diccionario_cantidades[maximum])) 
         return diccionario_cantidades[maximum]
-def minimax(tablero, profundidad, alpha, beta, es_maximizando, heuristicareceive=0):
-    if profundidad == 0 :
-        return heuristicareceive #valor cuando profundidad es 0
+def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,filaminimax=0):
+    if es_maximizando: 
+       turno = PIEZA_IA #2
+    else:
+       turno = PIEZA_JUGADOR #1
+    print('Evaluacion minimax comenzada: ')
+    print(tablero)
+    if profundidad == 0:
+        puntosjuntosprofundidad = puntos_juntos(tablero, filaminimax, columnaminimax, PIEZA_IA)#turno
+        # return heuristicareceive #valor cuando profundidad es 0
+        heursiticaprofundidad = heuristica(puntosjuntosprofundidad, PIEZA_IA, columnaminimax, filaminimax) #turno
+        return columnaminimax, heursiticaprofundidad
+        # return evaluar_ventana(tablero, turno )
     opciones = obtener_columnas_validas(tablero)
     posicionheuristica = {}
-    if es_maximizando: 
-       turno = PIEZA_IA
-    else:
-       turno = PIEZA_JUGADOR
+    
     print(opciones)
     for col in opciones: #todas las opciones disponibles del tablero y su heuristica
+      
       opcionfila = obtener_siguiente_fila_libre(tablero, col)
-      puntosjuntos = puntos_juntos(tablero, opcionfila, col, turno)#
+      
+      print('Evaluar posicion ' +str(opcionfila)+ ' ' +str(col) )
+      puntosjuntos = puntos_juntos(tablero, opcionfila, col, turno)
       print('puntos juntos ' +str(puntosjuntos))
       valor = heuristica(puntosjuntos, turno, col, opcionfila) #heuristica(puntos_juntos, turno, col, fila):
       print('valor heuristico: ' +str(valor))
       posicionheuristica[col] = int(valor)
       print(posicionheuristica) # 0: np.int64(1), 1: np.int64(2), 2: np.int64(3),
       print ('---------------------------------------------------')
-      evaluar_ventana 
+    #   evaluar_ventana 
 
     if es_maximizando: #nuestra logica :D
         print("Entrar a MAX")
-        maxEval = -1000000 #alpha
+        maxEval = -math.inf #alpha
+        mejor_columna = next(iter(posicionheuristica))
     #   for col in opciones:
         for colchild, heuristicachild in posicionheuristica.items(): # 0: np.int64(1), 1: np.int64(2), 2: np.int64(3),
             filadisponible = obtener_siguiente_fila_libre(tablero, colchild)
-            tablerohijo = tablero
+            print('Evaluar posicion ' +str(filadisponible)+ ' ' +str(colchild) )
+            tablerohijo = np.copy(tablero)
+            print(tablerohijo)
             tablerohijo[filadisponible][colchild] = turno
             print('Evaluar ' +str(colchild))
-            eval =  minimax(tablerohijo, profundidad - 1, heuristicachild, beta, False, heuristicachild)
+            
+            columnarecibida, eval =  minimax(tablerohijo, profundidad - 1, alpha, beta, False, colchild,filadisponible)
+            if eval > maxEval:
+                mejor_columna = colchild
             maxEval = max(maxEval, eval)
             alpha = max(alpha, eval)
             if beta <= alpha:
                 break
-        return maxEval 
+        return mejor_columna, maxEval 
     else:
-        minEval = 1000000 #beta
+        minEval = math.inf #beta
         print("Entrar a MIN")
+        mejor_columna = next(iter(posicionheuristica))
         for colchild, heuristicachild in posicionheuristica.items():
             filadisponible = obtener_siguiente_fila_libre(tablero, colchild)
-            tablerohijo = tablero
+            print('Evaluar posicion ' +str(filadisponible)+ ' ' +str(colchild) )
+            tablerohijo = np.copy(tablero)
+            print(tablerohijo)
             tablerohijo[filadisponible][colchild] = turno
             print('Evaluar ' +str(colchild))
-            eval = minimax(tablerohijo, profundidad - 1, alpha, heuristicachild, True,  heuristicachild )
+            
+            columnarecibida, eval = minimax(tablerohijo, profundidad - 1, alpha, beta, True,  colchild,filadisponible )
+            if eval < minEval:
+                mejor_columna = colchild
             minEval = min(minEval, eval)
             beta = min(beta, eval)
             if beta <= alpha:
                 break
-        return minEval
+        return mejor_columna, minEval
     # RETO: Implementar algoritmo Minimax con Poda Alfa-Beta
     # Debe retornar una tupla (columna, puntuacion)
     pass
@@ -401,28 +433,32 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, heuristicareceive
 #         return columna_elegida, valor_min
 
 def obtener_columnas_validas(tablero):
-    return [c for c in range(COLUMNAS) if tablero[FILAS-1][c] == 0]
+    # return [c for c in range(COLUMNAS) if tablero[FILAS-1][c] == 0]
+    return [c for c in range(COLUMNAS) if tablero[0][c] == 0]
 
 def imprimir_tablero(tablero):
     # Volteamos el tablero para que la fila 0 sea la de abajo
-    print(np.flip(tablero, 0))
+    # print(np.flip(tablero, 0))
+    print((tablero))
 
 def jugar():
     tablero = crear_tablero()
     game_over = False
-    turno = random.randint(0, 1) # 0 para Humano, 1 para IA
+    turno = int(input("Escribe 0 para el turno del Jugador primero y 1 para la IA primero: ")) # 0 para Humano, 1 para IA
     arbol_por_niveles = {}
-    minmax = True
+    
     while not game_over:
         if turno == 0: # Turno Humano / Oponente Manual
             col = int(input("Jugada del Oponente (0-6): "))
-            if tablero[FILAS-1][col] == 0:
+            if tablero[0][col] == 0:
                 fila = obtener_siguiente_fila_libre(tablero, col)
                 tablero[fila][col] = PIEZA_JUGADOR
                 turno = 1
         else: # Turno de tu IA
             print("IA pensando...")
-            col, score = minimax(tablero, 4, -math.inf, math.inf, minmax) #turno
+            col, score = minimax(tablero, 1, -math.inf, math.inf, True) #turno
+            print('Score devuelto ' +str(score))
+            # col, score = minimax(tablero, 4, -math.inf, math.inf, minmax) #turno
             # col = random.choice(obtener_columnas_validas(tablero))
             fila = obtener_siguiente_fila_libre(tablero, col)
             tablero[fila][col] = PIEZA_IA
