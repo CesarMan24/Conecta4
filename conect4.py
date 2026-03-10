@@ -312,6 +312,12 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
         maximum = max(diccionario_cantidades, key=diccionario_cantidades.get)  # Just use 'min' instead of 'max' for minimum.
         print('mayor cantidad ' +str(diccionario_cantidades[maximum])) 
         return diccionario_cantidades[maximum]
+# def puntuacioncon0profundidad(tablero, turno):
+#     for i in range(FILAS):
+#         for j in range(COLUMNAS):
+#             if tablero[i][j] == turno:
+
+
 def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,filaminimax=0):
     if es_maximizando: 
        turno = PIEZA_IA #2
@@ -320,10 +326,11 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
     print('Evaluacion minimax comenzada: ')
     print(tablero)
     if profundidad == 0:
-        puntosjuntosprofundidad = puntos_juntos(tablero, filaminimax, columnaminimax, PIEZA_IA)#turno
-        # return heuristicareceive #valor cuando profundidad es 0
-        heursiticaprofundidad = heuristica(puntosjuntosprofundidad, PIEZA_IA, columnaminimax, filaminimax) #turno
-        return columnaminimax, heursiticaprofundidad
+        # puntosjuntosprofundidad = puntos_juntos(tablero, filaminimax, columnaminimax, PIEZA_IA)#turno
+        # # return heuristicareceive #valor cuando profundidad es 0
+        # heursiticaprofundidad = heuristica(puntosjuntosprofundidad, PIEZA_IA, columnaminimax, filaminimax) #turno
+        # return columnaminimax, heursiticaprofundidad
+        return None, 0
         # return evaluar_ventana(tablero, turno )
     opciones = obtener_columnas_validas(tablero)
     posicionheuristica = {}
@@ -352,15 +359,17 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             filadisponible = obtener_siguiente_fila_libre(tablero, colchild)
             print('Evaluar posicion ' +str(filadisponible)+ ' ' +str(colchild) )
             tablerohijo = np.copy(tablero)
-            print(tablerohijo)
+            # print(tablerohijo)
             tablerohijo[filadisponible][colchild] = turno
             print('Evaluar ' +str(colchild))
             
             columnarecibida, eval =  minimax(tablerohijo, profundidad - 1, alpha, beta, False, colchild,filadisponible)
-            if eval > maxEval:
+            evaltotal = eval + heuristicachild
+            if evaltotal > maxEval: #eval
                 mejor_columna = colchild
-            maxEval = max(maxEval, eval)
-            alpha = max(alpha, eval)
+                maxEval = evaltotal #
+            # maxEval = max(maxEval, eval)
+            alpha = max(alpha, evaltotal) #eval
             if beta <= alpha:
                 break
         return mejor_columna, maxEval 
@@ -377,10 +386,12 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             print('Evaluar ' +str(colchild))
             
             columnarecibida, eval = minimax(tablerohijo, profundidad - 1, alpha, beta, True,  colchild,filadisponible )
+            evaltotal = heuristicachild + eval
             if eval < minEval:
                 mejor_columna = colchild
-            minEval = min(minEval, eval)
-            beta = min(beta, eval)
+                minEval = evaltotal
+            #minEval = min(minEval, eval)
+            beta = min(beta, evaltotal) #eval
             if beta <= alpha:
                 break
         return mejor_columna, minEval
@@ -456,7 +467,7 @@ def jugar():
                 turno = 1
         else: # Turno de tu IA
             print("IA pensando...")
-            col, score = minimax(tablero, 1, -math.inf, math.inf, True) #turno
+            col, score = minimax(tablero, 3, -math.inf, math.inf, True) #turno
             print('Score devuelto ' +str(score))
             # col, score = minimax(tablero, 4, -math.inf, math.inf, minmax) #turno
             # col = random.choice(obtener_columnas_validas(tablero))
