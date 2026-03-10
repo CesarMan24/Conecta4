@@ -59,7 +59,7 @@ def obtener_siguiente_fila_libre(tablero, col):
         pastf = f
 
 def verificar_victoria(tablero, pieza):
-    imprimir_tablero(tablero)
+    # imprimir_tablero(tablero)
     #Hotizontal
     for c in range(COLUMNAS - 3):
         for f in range(FILAS):
@@ -461,18 +461,32 @@ def jugar():
     while not game_over:
         if turno == 0: # Turno Humano / Oponente Manual
             col = int(input("Jugada del Oponente (0-6): "))
+            # print('Verificando victoria')
+            # victoria = verificar_victoria(tablero, turno)
+            turnoverificarvictoria = PIEZA_JUGADOR
             if tablero[0][col] == 0:
                 fila = obtener_siguiente_fila_libre(tablero, col)
                 tablero[fila][col] = PIEZA_JUGADOR
+                print('Verificando victoria')
+                victoria = verificar_victoria(tablero, turnoverificarvictoria)
+                if victoria:
+                    print('Tenemos ganador: EL RIVAL GANO ')
+                    return turno
                 turno = 1
         else: # Turno de tu IA
             print("IA pensando...")
+            turnoverificarvictoria = PIEZA_IA
             col, score = minimax(tablero, 3, -math.inf, math.inf, True) #turno
             print('Score devuelto ' +str(score))
             # col, score = minimax(tablero, 4, -math.inf, math.inf, minmax) #turno
             # col = random.choice(obtener_columnas_validas(tablero))
             fila = obtener_siguiente_fila_libre(tablero, col)
             tablero[fila][col] = PIEZA_IA
+            print('Verificando victoria')
+            victoria = verificar_victoria(tablero, turnoverificarvictoria)
+            if victoria:
+                print('Tenemos ganador: LA IA GANO ')
+                return turno
             print(f"La IA eligió la columna: {col}")
             turno = 0
             # if minmax: #evaluar uno en maximo-minimo-maximo
