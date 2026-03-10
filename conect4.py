@@ -388,7 +388,7 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             
             columnarecibida, eval = minimax(tablerohijo, profundidad - 1, alpha, beta, True,  colchild,filadisponible )
             evaltotal = heuristicachild + eval
-            if eval < minEval:
+            if evaltotal < minEval:
                 mejor_columna = colchild
                 minEval = evaltotal
             #minEval = min(minEval, eval)
@@ -478,7 +478,7 @@ def jugar():
         else: # Turno de tu IA
             print("IA pensando...")
             turnoverificarvictoria = PIEZA_IA
-            col, score = minimax(tablero, 1, -math.inf, math.inf, True) #turno
+            col, score = minimax(tablero, 3, -math.inf, math.inf, True) #turno
             print('Score devuelto ' +str(score))
             # col, score = minimax(tablero, 4, -math.inf, math.inf, minmax) #turno
             # col = random.choice(obtener_columnas_validas(tablero))
@@ -488,6 +488,7 @@ def jugar():
             victoria = verificar_victoria(tablero, turnoverificarvictoria)
             if victoria:
                 print('Tenemos ganador: LA IA GANO ')
+                print(tablero)
                 return turno
             print(f"La IA eligió la columna: {col}")
             turno = 0
