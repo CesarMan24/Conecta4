@@ -106,19 +106,19 @@ def evaluar_ventana(ventana, pieza):
 def heuristica(puntos_juntos, turno, col, fila):
     if puntos_juntos == 2:
         if turno == 2:
-            return 20
+            return (20 + valores[fila][col])
         else:
-            return -20  
+            return (-20 -valores[fila][col] )
     elif puntos_juntos == 3:
         if turno == 2:
-            return 50
+            return (50 +valores[fila][col])
         else:
-            return -60
+            return (-60 -valores[fila][col])
     elif puntos_juntos == 4:
         if turno == 2:
-            return 100
+            return (100 +valores[fila][col])
         else:
-            return -100
+            return (-100 -valores[fila][col])
     elif puntos_juntos == 1:
         return valores[fila][col]
     
@@ -330,6 +330,7 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
         # # return heuristicareceive #valor cuando profundidad es 0
         # heursiticaprofundidad = heuristica(puntosjuntosprofundidad, PIEZA_IA, columnaminimax, filaminimax) #turno
         # return columnaminimax, heursiticaprofundidad
+
         return None, 0
         # return evaluar_ventana(tablero, turno )
     opciones = obtener_columnas_validas(tablero)
@@ -339,7 +340,7 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
     for col in opciones: #todas las opciones disponibles del tablero y su heuristica
       
       opcionfila = obtener_siguiente_fila_libre(tablero, col)
-      
+      print('TURNO: ' +str(turno))
       print('Evaluar posicion ' +str(opcionfila)+ ' ' +str(col) )
       puntosjuntos = puntos_juntos(tablero, opcionfila, col, turno)
       print('puntos juntos ' +str(puntosjuntos))
@@ -365,11 +366,11 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             
             columnarecibida, eval =  minimax(tablerohijo, profundidad - 1, alpha, beta, False, colchild,filadisponible)
             evaltotal = eval + heuristicachild
-            if evaltotal > maxEval: #eval
-                mejor_columna = colchild
-                maxEval = evaltotal #
+            if evaltotal > maxEval: #eval #1 2 3 4 3 2 1
+                mejor_columna = colchild #0 1 2 3
+                maxEval = evaltotal #4
             # maxEval = max(maxEval, eval)
-            alpha = max(alpha, evaltotal) #eval
+            alpha = max(alpha, evaltotal) #eval 1 2 3 4
             if beta <= alpha:
                 break
         return mejor_columna, maxEval 
@@ -471,12 +472,13 @@ def jugar():
                 victoria = verificar_victoria(tablero, turnoverificarvictoria)
                 if victoria:
                     print('Tenemos ganador: EL RIVAL GANO ')
+                    print(tablero)
                     return turno
                 turno = 1
         else: # Turno de tu IA
             print("IA pensando...")
             turnoverificarvictoria = PIEZA_IA
-            col, score = minimax(tablero, 3, -math.inf, math.inf, True) #turno
+            col, score = minimax(tablero, 1, -math.inf, math.inf, True) #turno
             print('Score devuelto ' +str(score))
             # col, score = minimax(tablero, 4, -math.inf, math.inf, minmax) #turno
             # col = random.choice(obtener_columnas_validas(tablero))
@@ -499,4 +501,5 @@ def jugar():
         
 
 if __name__ == "__main__":
+    #print('GANO LA PIEZA # 'jugar())
     jugar()
