@@ -349,7 +349,7 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
       if valor > 100:
           return col, posicionheuristica[col]
       if valor < -150:
-          col, posicionheuristica[col]
+          return col, posicionheuristica[col]
       print(posicionheuristica) # 0: np.int64(1), 1: np.int64(2), 2: np.int64(3),
       print ('---------------------------------------------------')
     #   evaluar_ventana 
@@ -374,8 +374,8 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
                 return colchild, math.inf
             
             columnarecibida, eval =  minimax(tablerohijo, profundidad - 1, alpha, beta, False, colchild,filadisponible)
-            if eval == math.inf:#
-                return colchild, math.inf#
+            # if eval == math.inf:#
+            #     return colchild, math.inf#
             evaltotal = eval + heuristicachild
             if evaltotal > maxEval: #eval #1 2 3 4 3 2 1
                 mejor_columna = colchild #0 1 2 3
@@ -401,8 +401,8 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             if verificar_victoria(tablerohijo,PIEZA_JUGADOR ):
                 return colchild, -math.inf
             columnarecibida, eval = minimax(tablerohijo, profundidad - 1, alpha, beta, True,  colchild,filadisponible )
-            if eval == -math.inf:
-                return colchild, -math.inf
+            # if eval == -math.inf:
+            #     return colchild, -math.inf
             evaltotal = heuristicachild + eval
             if evaltotal < minEval:
                 mejor_columna = colchild
@@ -479,13 +479,14 @@ def verificarempate(tablero):
 
 def jugar():
     tablero = crear_tablero()
+    print(tablero)
     game_over = False
     turno = int(input("Escribe 0 para el turno del Jugador primero y 1 para la IA primero: ")) # 0 para Humano, 1 para IA
     arbol_por_niveles = {}
     # escenario = "BLOQUEO_NECESARIO"
     # escenario = "VICTORIA_INMEDIATA"
-    escenario = "TRAMPA_DIAGONAL"
-    cargar_escenario_prueba(tablero, escenario)
+    # escenario = "TRAMPA_DIAGONAL"
+    # cargar_escenario_prueba(tablero, escenario)
     while not game_over:
         if turno == 0: # Turno Humano / Oponente Manual
             col = int(input("Jugada del Oponente (0-6): "))
