@@ -108,17 +108,17 @@ def heuristica(puntos_juntos, turno, col, fila):
         if turno == 2:
             return (20 + valores[fila][col])
         else:
-            return (-20 -valores[fila][col] )
+            return (-40 -valores[fila][col] )
     elif puntos_juntos == 3:
         if turno == 2:
             return (50 +valores[fila][col])
         else:
-            return (-60 -valores[fila][col])
+            return (-80 -valores[fila][col])
     elif puntos_juntos == 4:
         if turno == 2:
             return (100 +valores[fila][col])
         else:
-            return (-100 -valores[fila][col])
+            return (-150 -valores[fila][col])
     elif puntos_juntos == 1:
         return valores[fila][col]
     
@@ -363,16 +363,19 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             # print(tablerohijo)
             tablerohijo[filadisponible][colchild] = turno
             print('Evaluar ' +str(colchild))
-            
+            if verificar_victoria(tablerohijo,PIEZA_IA ):
+                return colchild, math.inf
             columnarecibida, eval =  minimax(tablerohijo, profundidad - 1, alpha, beta, False, colchild,filadisponible)
             evaltotal = eval + heuristicachild
             if evaltotal > maxEval: #eval #1 2 3 4 3 2 1
                 mejor_columna = colchild #0 1 2 3
                 maxEval = evaltotal #4
             # maxEval = max(maxEval, eval)
+            
             alpha = max(alpha, evaltotal) #eval 1 2 3 4
             if beta <= alpha:
                 break
+            
         return mejor_columna, maxEval 
     else:
         minEval = math.inf #beta
@@ -385,7 +388,8 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             print(tablerohijo)
             tablerohijo[filadisponible][colchild] = turno
             print('Evaluar ' +str(colchild))
-            
+            if verificar_victoria(tablerohijo,PIEZA_JUGADOR ):
+                return colchild, -math.inf
             columnarecibida, eval = minimax(tablerohijo, profundidad - 1, alpha, beta, True,  colchild,filadisponible )
             evaltotal = heuristicachild + eval
             if evaltotal < minEval:
@@ -395,6 +399,7 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             beta = min(beta, evaltotal) #eval
             if beta <= alpha:
                 break
+            
         return mejor_columna, minEval
     # RETO: Implementar algoritmo Minimax con Poda Alfa-Beta
     # Debe retornar una tupla (columna, puntuacion)
