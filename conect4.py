@@ -237,7 +237,7 @@ def puntos_juntos(tablero, fila, col, turno): #creado por mi
                     diccionario_cantidades['diagonal_abajo_izquierda'] = diccionario_cantidades['diagonal_abajo_izquierda'] + 1
                     filauso = filauso - 1
                     colauso = colauso + 1
-                    if colauso == 6 and filauso == 0:
+                    if colauso == 6 or filauso == 0: #and
                         break
                 #     return arrayjuntos
                 # return arrayjuntos
@@ -455,6 +455,14 @@ def imprimir_tablero(tablero):
     # Volteamos el tablero para que la fila 0 sea la de abajo
     # print(np.flip(tablero, 0))
     print((tablero))
+def verificarempate(tablero):
+    contador = 0
+    for i in range(FILAS):
+        for j in range(COLUMNAS):
+            if tablero[i][j] == 0:
+                contador = contador + 1
+    if contador == 0:
+        return True
 
 def jugar():
     tablero = crear_tablero()
@@ -475,6 +483,11 @@ def jugar():
                 victoria = verificar_victoria(tablero, turnoverificarvictoria)
                 if victoria:
                     print('Tenemos ganador: EL RIVAL GANO ')
+                    print(tablero)
+                    return turno
+                empate = verificarempate(tablero)
+                if empate:
+                    print('Partido quedo en empate ')
                     print(tablero)
                     return turno
                 turno = 1
