@@ -330,7 +330,6 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
         # # return heuristicareceive #valor cuando profundidad es 0
         # heursiticaprofundidad = heuristica(puntosjuntosprofundidad, PIEZA_IA, columnaminimax, filaminimax) #turno
         # return columnaminimax, heursiticaprofundidad
-
         return None, 0
         # return evaluar_ventana(tablero, turno )
     opciones = obtener_columnas_validas(tablero)
