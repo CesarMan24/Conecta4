@@ -84,24 +84,24 @@ def verificar_victoria(tablero, pieza):
 
   
 
-def evaluar_ventana(ventana, pieza):
+# def evaluar_ventana(ventana, pieza):
    
     
-    puntuacion = 0
-    piezaActual = PIEZA_IA
-    if pieza == PIEZA_JUGADOR:
-      piezaActual = PIEZA_JUGADOR
-      if ventana.count(piezaActual) == 4:
-        puntuacion = puntuacion + puntaje[4]
-      elif ventana.count(piezaActual) == 3 and ventana.count(VACIO) == 1:
-        puntuacion = puntuacion + puntaje[3]
-      elif ventana.count(piezaActual) == 2 and ventana.count(VACIO) == 2:
-        puntuacion = puntuacion + puntaje[2]
+#     puntuacion = 0
+#     piezaActual = PIEZA_IA
+#     if pieza == PIEZA_JUGADOR:
+#       piezaActual = PIEZA_JUGADOR
+#       if ventana.count(piezaActual) == 4:
+#         puntuacion = puntuacion + puntaje[4]
+#       elif ventana.count(piezaActual) == 3 and ventana.count(VACIO) == 1:
+#         puntuacion = puntuacion + puntaje[3]
+#       elif ventana.count(piezaActual) == 2 and ventana.count(VACIO) == 2:
+#         puntuacion = puntuacion + puntaje[2]
 
-    if ventana.count(piezaActual) == 4 and ventana.count(VACIO)==1:
-        puntuacion = puntuacion - puntaje[4]  
+#     if ventana.count(piezaActual) == 4 and ventana.count(VACIO)==1:
+#         puntuacion = puntuacion - puntaje[4]  
     
-    return puntuacion
+#     return puntuacion
 
 def heuristica(puntos_juntos, turno, col, fila):
     if puntos_juntos == 2:
@@ -120,8 +120,12 @@ def heuristica(puntos_juntos, turno, col, fila):
         else:
             return (-150 -valores[fila][col])
     elif puntos_juntos == 1:
-        return valores[fila][col]
-    
+        if turno == 2:
+            return valores[fila][col]
+        else:
+            return -valores[fila][col]
+    return 0
+        # return valores[fila][col]
 # IA ingresa una ficha sin secuencia
 # Valor de la celda asignada puntos
 # IA va a llegar a  dos fichas juntas
@@ -326,33 +330,35 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
     print('Evaluacion minimax comenzada: ')
     print(tablero)
     if profundidad == 0:
-        # puntosjuntosprofundidad = puntos_juntos(tablero, filaminimax, columnaminimax, PIEZA_IA)#turno
-        # # return heuristicareceive #valor cuando profundidad es 0
-        # heursiticaprofundidad = heuristica(puntosjuntosprofundidad, PIEZA_IA, columnaminimax, filaminimax) #turno
+        ultimoturno = PIEZA_JUGADOR if es_maximizando else PIEZA_IA
+        
+        # puntosjuntosprofundidad = puntos_juntos(tablero, filaminimax, columnaminimax, ultimoturno)#turno
+        # # # return heuristicareceive #valor cuando profundidad es 0
+        # heursiticaprofundidad = heuristica(puntosjuntosprofundidad, ultimoturno, columnaminimax, filaminimax) #turno
         # return columnaminimax, heursiticaprofundidad
-        return None, 0
+        return columnaminimax, 0
+        # return None, 0
         # return evaluar_ventana(tablero, turno )
     opciones = obtener_columnas_validas(tablero)
     posicionheuristica = {}
     
     print(opciones)
-    for col in opciones: #todas las opciones disponibles del tablero y su heuristica
-      
-      opcionfila = obtener_siguiente_fila_libre(tablero, col)
-      print('TURNO: ' +str(turno))
-      print('Evaluar posicion ' +str(opcionfila)+ ' ' +str(col) )
-      puntosjuntos = puntos_juntos(tablero, opcionfila, col, turno)
-      print('puntos juntos ' +str(puntosjuntos))
-      valor = heuristica(puntosjuntos, turno, col, opcionfila) #heuristica(puntos_juntos, turno, col, fila):
-      print('valor heuristico: ' +str(valor))
-      posicionheuristica[col] = int(valor)
-      if valor > 100:
-        return col, posicionheuristica[col]
-      if valor < -150:
-          return col, posicionheuristica[col]
-      print(posicionheuristica) # 0: np.int64(1), 1: np.int64(2), 2: np.int64(3),
-      print ('---------------------------------------------------')
-    #   evaluar_ventana 
+    for col in opciones:
+        opcionfila = obtener_siguiente_fila_libre(tablero, col)
+        print('TURNO: ' +str(turno))
+        print('Evaluar posicion ' +str(opcionfila)+ ' ' +str(col))
+        tablerotemp = np.copy(tablero)
+        tablerotemp[opcionfila][col] = turno
+        puntosjuntos = puntos_juntos(tablerotemp, opcionfila, col, turno)
+        print('puntos juntos ' +str(puntosjuntos))
+        valor = heuristica(puntosjuntos, turno, col, opcionfila)
+        print('valor heuristico: ' +str(valor))
+        posicionheuristica[col] = int(valor)
+        if turno == PIEZA_IA and verificar_victoria(tablerotemp, PIEZA_IA):
+                return col, math.inf
+        if turno == PIEZA_JUGADOR and verificar_victoria(tablerotemp, PIEZA_JUGADOR):
+                return col, -math.inf
+   
 
     if es_maximizando: #nuestra logica :D
         print("Entrar a MAX")
