@@ -346,6 +346,10 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
       valor = heuristica(puntosjuntos, turno, col, opcionfila) #heuristica(puntos_juntos, turno, col, fila):
       print('valor heuristico: ' +str(valor))
       posicionheuristica[col] = int(valor)
+      if valor > 100:
+          return col, posicionheuristica[col]
+      if valor < -150:
+          col, posicionheuristica[col]
       print(posicionheuristica) # 0: np.int64(1), 1: np.int64(2), 2: np.int64(3),
       print ('---------------------------------------------------')
     #   evaluar_ventana 
@@ -356,15 +360,22 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
         mejor_columna = next(iter(posicionheuristica))
     #   for col in opciones:
         for colchild, heuristicachild in posicionheuristica.items(): # 0: np.int64(1), 1: np.int64(2), 2: np.int64(3),
+            # if heuristicachild > 100:#
+            #     return colchild, math.inf#
             filadisponible = obtener_siguiente_fila_libre(tablero, colchild)
             print('Evaluar posicion ' +str(filadisponible)+ ' ' +str(colchild) )
             tablerohijo = np.copy(tablero)
             # print(tablerohijo)
             tablerohijo[filadisponible][colchild] = turno
             print('Evaluar ' +str(colchild))
+            print(f'Profundidad {profundidad} | turno {turno} | probando columna {colchild}')
             if verificar_victoria(tablerohijo,PIEZA_IA ):
+                print(f'VICTORIA detectada en profundidad {profundidad} con columna {colchild}')
                 return colchild, math.inf
+            
             columnarecibida, eval =  minimax(tablerohijo, profundidad - 1, alpha, beta, False, colchild,filadisponible)
+            if eval == math.inf:#
+                return colchild, math.inf#
             evaltotal = eval + heuristicachild
             if evaltotal > maxEval: #eval #1 2 3 4 3 2 1
                 mejor_columna = colchild #0 1 2 3
@@ -390,6 +401,8 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             if verificar_victoria(tablerohijo,PIEZA_JUGADOR ):
                 return colchild, -math.inf
             columnarecibida, eval = minimax(tablerohijo, profundidad - 1, alpha, beta, True,  colchild,filadisponible )
+            if eval == -math.inf:
+                return colchild, -math.inf
             evaltotal = heuristicachild + eval
             if evaltotal < minEval:
                 mejor_columna = colchild
@@ -469,7 +482,10 @@ def jugar():
     game_over = False
     turno = int(input("Escribe 0 para el turno del Jugador primero y 1 para la IA primero: ")) # 0 para Humano, 1 para IA
     arbol_por_niveles = {}
-    
+    # escenario = "BLOQUEO_NECESARIO"
+    # escenario = "VICTORIA_INMEDIATA"
+    escenario = "TRAMPA_DIAGONAL"
+    cargar_escenario_prueba(tablero, escenario)
     while not game_over:
         if turno == 0: # Turno Humano / Oponente Manual
             col = int(input("Jugada del Oponente (0-6): "))
@@ -494,14 +510,24 @@ def jugar():
         else: # Turno de tu IA
             print("IA pensando...")
             turnoverificarvictoria = PIEZA_IA
-            col, score = minimax(tablero, 3, -math.inf, math.inf, True) #turno
+            print("=== PRUEBA DE JUGADAS INMEDIATAS DE LA IA ===")
+            # for col_test in obtener_columnas_validas(tablero):
+            #     fila_test = obtener_siguiente_fila_libre(tablero, col_test)
+            #     copia_test = np.copy(tablero)
+            #     copia_test[fila_test][col_test] = PIEZA_IA
+            #     print("Columna:", col_test, "Fila:", fila_test)
+            #     print(copia_test)
+            #     print("Gana IA?:", verificar_victoria(copia_test, PIEZA_IA))
+            #     print("--------------------------------")
+            col, score = minimax(tablero, 4, -math.inf, math.inf, True) #turno
             print('Score devuelto ' +str(score))
+            print('Columna devuelta ' +str(col))
             # col, score = minimax(tablero, 4, -math.inf, math.inf, minmax) #turno
             # col = random.choice(obtener_columnas_validas(tablero))
             fila = obtener_siguiente_fila_libre(tablero, col)
             tablero[fila][col] = PIEZA_IA
             print('Verificando victoria')
-            victoria = verificar_victoria(tablero, turnoverificarvictoria)
+            victoria = verificar_victoria(tablero, PIEZA_IA)
             if victoria:
                 print('Tenemos ganador: LA IA GANO ')
                 print(tablero)
@@ -515,7 +541,49 @@ def jugar():
 
         imprimir_tablero(tablero)
         # RETO: Añadir condición de salida si alguien gana o se llena el tablero
-        
+def cargar_escenario_prueba(tablero, escenario):
+
+  """
+
+  Simula un tablero específico para probar la reacción de la IA.
+
+  0: Vacío, 1: Jugador (Oponente), 2: IA
+
+  """
+
+  if escenario == "BLOQUEO_NECESARIO":
+
+    # El oponente tiene 3 en línea horizontal abajo. La IA DEBE bloquear.
+
+    tablero[5][0] = 1
+    tablero[5][1] = 1
+    tablero[5][2] = 1
+
+    # La IA debería elegir la columna 3.
+
+  elif escenario == "VICTORIA_INMEDIATA":
+
+    # La IA tiene 3 en línea vertical. Debe ganar en este turno.
+
+    tablero[5][3] = 2
+    tablero[5][4] = 2
+    tablero[5][5] = 2
+
+    # La IA debería elegir la columna 5.
+
+  elif escenario == "TRAMPA_DIAGONAL":
+
+    # Escenario de mayor complejidad para probar profundidad.
+
+    tablero[2][0] = 1
+
+    tablero[3][1] = 1
+
+    tablero[4][2] = 1
+
+    # IA debe bloquear la diagonal en (3,3) o evitar que el rival llegue ahí.
+
+  return tablero       
 
 if __name__ == "__main__":
     #print('GANO LA PIEZA # 'jugar())
