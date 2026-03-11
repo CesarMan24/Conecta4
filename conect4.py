@@ -114,7 +114,7 @@ def heuristica(puntos_juntos, turno, col, fila):
             return (50 +valores[fila][col])
         else:
             return (-80 -valores[fila][col])
-    elif puntos_juntos == 4:
+    elif puntos_juntos >= 4:
         if turno == 2:
             return (100 +valores[fila][col])
         else:
@@ -398,7 +398,6 @@ def minimax(tablero, profundidad, alpha, beta, es_maximizando, columnaminimax=0,
             beta = min(beta, evaltotal) #eval
             if beta <= alpha:
                 break
-            
         return mejor_columna, minEval
     # RETO: Implementar algoritmo Minimax con Poda Alfa-Beta
     # Debe retornar una tupla (columna, puntuacion)
